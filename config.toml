@@ -1,0 +1,51 @@
+baseurl = "todo"
+defaultContentLanguage = "en"
+hasCJKLanguage = true
+copyright = "Except where otherwise noted, content on this site is licensed under CC-BY-SA"
+title = "todo"
+theme = "hpstr"
+disqusShortname = "todo"
+footnoteReturnLinkContents = "↩"
+enableRobotsTXT = true
+summaryLength = 999999999999
+
+[markup.highlight]
+codeFences = false
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[permalinks]
+post = "/:year/:month/:filename/"
+page = "/:filename/"
+life = "/life/:year/:month/:filename/"
+game = "/games/:year/:month/:filename/"
+journal = "/journal/:year/:month/:slug/"
+
+[Taxonomies]
+tag = "tags"
+series = "series"
+
+[params]
+description = "A personal blog with tech, bussiness and etc."
+hiddenSections = ["page", "life", "journal"]
+
+[params.author]
+name = "khan"
+bio = "Programmer,"
+avatar = "images/avatar.jpg"
+email = "tran_khanh@outlook.com"
+twitter = "trkhanh8"
+github = "trkhanh8"
+
+[Languages.zh]
+copyright = "除特别说明，所有内容使用署名-相同方式共享 (CC-BY-SA)"
+title = "~chay 博客"
+languageName = "中文"
+disqusShortname = "chayblog"
+
+[Languages.zh.params]
+description = "个人博客，关于技术，游戏等"
+
+[Languages.en]
+languageName = "English"
