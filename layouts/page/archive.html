@@ -1,0 +1,56 @@
+{{ partial "head.html" . }}
+<body id="post-index">
+{{ partial "navigation.html" . }}
+<div id="main" role="main">
+  <header class="header-title">
+    <div class="header-title-wrap">
+      <h1 class="entry-title"><a href="{{ .RelPermalink }}" rel="bookmark" title="{{ .Title }}">{{ .Title }}</a></h1>
+    </div><!-- /.header-title-wrap -->
+  </header>
+  <ul class="submenu inline-list">
+    {{ $sections := slice }}
+    {{ range $sectionParams := sort .Site.Data.sections "ordering" }}
+      {{ if first 1 (where $.Site.RegularPages "Section" $sectionParams.key) }}
+        {{ $sections = $sections | append $sectionParams.key }}
+      {{ end }}
+    {{ end }}
+    {{ range $sectionKey := $sections }}
+      {{ $sectionParams := index $.Site.Data.sections $sectionKey }}
+      <li><a href="#{{ $sectionKey }}"><i class="fa fa-fw fa-{{ $sectionParams.icon }}"></i> {{ i18n (print "sections." $sectionKey) }}</a></li>
+    {{ end }}
+    <li><a href="{{ "/tags/" | relLangURL }}"><i class="fa fa-fw fa-tags"></i> {{ i18n "taxonomies.tag" }}</a></li>
+    {{ if .IsTranslated }}
+      {{ range .Translations }}
+    <li class="translation"><a href="{{ .RelPermalink }}"><i class="fa fa-fw fa-globe"></i> {{ .Lang | i18n }}</a>
+      {{ end }}
+    {{ end }}
+  </ul>
+  {{ range $sectionKey := $sections }}
+  <article>
+    <h2>
+      <a name="{{ $sectionKey }}" href="{{ print "/" $sectionKey "/" | relLangURL }}">
+        {{ with (index $.Site.Data.sections $sectionKey) }}
+          {{ with .icon }}
+        <i class="fa fa-fw fa-{{ . }}"></i>
+          {{ end }}
+        {{ end }}
+        {{ print "sections." $sectionKey | i18n}}
+      </a>
+    </h2>
+    {{ range (where $.Site.RegularPages "Section" $sectionKey).GroupByDate "2006" }}
+    <h3>{{ .Key }}</h3>
+    <ul>
+      {{ range .Pages }}
+      <li class="entry-title">
+        <span class="entry-date date published update dentry-meta">{{ .Date.Format (i18n "date.short") }}</span>
+        <a href="{{ .RelPermalink }}" title="{{ .Title }}">
+          {{ .Title }}
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+    {{ end }}
+  </article>
+  {{ end }}
+</div><!-- /#main -->
+{{ partial "foot.html" . }}

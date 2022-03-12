@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+{{ replace `<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js lt-ie9 lt-ie8" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js lt-ie9" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"><!--<![endif]-->` `"en"` (print "\"" .Site.Language.Lang "\"") | safeHTML }}
+<head>
+<meta charset="utf-8">
+<meta name="language" content="{{ .Site.Language.LanguageName }}">
+<title>{{ if eq .IsHome false }}{{ .Title }} &#8211; {{ end }}{{ .Site.Title }}</title>
+{{ with .Description }}
+  {{ $.Scratch.Set "Description" . }}
+{{ else }}
+  {{ with .Summary }}
+    {{ $.Scratch.Set "Description" ( . | plainify ) }}
+  {{ else }}
+    {{ $.Scratch.Set "Description" $.Site.Params.description }}
+  {{ end}}
+{{ end }}
+<meta name="description" content="{{ .Scratch.Get "Description" }}">
+{{- if .IsHome }}
+    {{ $.Scratch.Set "Params" .Site.Params }}
+{{- else if .IsNode }}
+    {{ $.Scratch.Set "Params" (or (index .Site.Data.sections (lower .Title)) .Params) }}
+{{- else }}
+    {{ $.Scratch.Set "Params" .Params }}
+{{- end }}
+{{- if .Params.tags }}<meta name="keywords" content="{{ delimit .Params.tags ", " }}">{{ end -}}
+
+<!-- Open Graph and Twitter cards -->
+{{- partial "twitter_og_cards.html" . -}}
+
+{{- with .Site.Params.google_verify }}<meta name="google-site-verification" content="{{ . }}">{{ end }}
+{{- with .Site.Params.bing_verify }}<meta name="msvalidate.01" content="{{ . }}">{{ end }}
+
+<link rel="canonical" href="{{ .Permalink }}">
+<meta name="site" content="{{ "/" | absURL }}">
+{{ with .OutputFormats.Get "rss" }}
+  <link href="{{ .Permalink | relURL | absLangURL }}" rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" />
+  <link href="{{ .Permalink | relURL | absLangURL }}" rel="feed" type="application/rss+xml" title="{{ $.Site.Title }}" />
+{{ end }}
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="{{ "/css/main.v7.css" | relURL }}">
+{{ if eq .Params.math true }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+{{ end }}
+
+<meta http-equiv="cleartype" content="on">
+<!-- Hugo version -->
+<meta name="generator" content="Hugo 0.18.1" />
+<!-- Load Modernizr -->
+<script src="{{ "/js/vendor/modernizr-2.6.2.custom.min.js" | relURL }}"></script>
+
+<!-- Icons -->
+<link rel="apple-touch-icon" sizes="57x57" href="{{ "/apple-icon-57x57.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="60x60" href="{{ "/apple-icon-60x60.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="72x72" href="{{ "/apple-icon-72x72.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="76x76" href="{{ "/apple-icon-76x76.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="114x114" href="{{ "/apple-icon-114x114.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="120x120" href="{{ "/apple-icon-120x120.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="144x144" href="{{ "/apple-icon-144x144.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="152x152" href="{{ "/apple-icon-152x152.png" | relURL }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ "/apple-icon-180x180.png" | relURL }}">
+<link rel="icon" type="image/png" sizes="192x192"  href="{{ "/android-icon-192x192.png" | relURL }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ "/favicon-32x32.png" | relURL }}">
+<link rel="icon" type="image/png" sizes="96x96" href="{{ "/favicon-96x96.png" | relURL }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ "/favicon-16x16.png" | relURL }}">
+<link rel="manifest" href="{{ "/manifest.json" | relURL }}">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="{{ "/ms-icon-144x144.png" | relURL }}">
+<meta name="theme-color" content="#ffffff">
+
+{{ with $.Param "background" }}
+<style type="text/css">body {background-image:url({{ . }});}</style>
+{{ end }}
+</head>

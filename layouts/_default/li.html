@@ -1,0 +1,11 @@
+<li class="entry-title">
+  <span class="entry-date date published update dentry-meta">{{ .Date.Format (i18n "date.short") }}</span>
+  <a href="{{ .RelPermalink }}" title="{{ .Title }}">
+  {{ with (index $.Site.Data.sections .Section) }}
+    {{ with .icon }}
+    <i class="fa fa-fw fa-{{ . }}"></i>
+    {{ end }}
+  {{ end }}
+    {{ .Title }}
+  </a>
+</li>

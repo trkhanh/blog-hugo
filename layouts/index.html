@@ -1,0 +1,66 @@
+{{ partial "head.html" . }}
+<body id="post-index" {{ if isset ($.Scratch.Get "Params") "image" }}class="feature"{{ end }}></body>
+{{ partial "navigation.html" . }}
+<div class="entry-header">
+  {{ if isset ($.Scratch.Get "Params") "image" }}{{ $imageparams := index ($.Scratch.Get "Params") "image" }}
+  {{ if $imageparams.credit }}<div class="image-credit">Image credit: <a href="{{ $imageparams.creditlink }}">{{ $imageparams.credit }}</a></div><!-- /.image-credit -->{{ end }}
+    <div class="entry-image">
+      <img src="{{ $imageparams.feature | relURL }}" alt="{{ .Title }}">
+    </div><!-- /.entry-image -->
+  {{ end }}
+  <div class="header-title">
+    <div class="header-title-wrap">
+      <h1><a href="{{ relLangURL "/" }}" title="{{ i18n "goToHomepage" }}">{{ .Site.Title }}</a></h1>
+      {{ with .Site.Params.subtitle }}
+      <h2>{{ . }}</h2>
+      {{ end }}
+      {{ partial "languages" . }}
+    </div><!-- /.header-title-wrap -->
+  </div><!-- /.header-title -->
+</div><!-- /.entry-header -->
+
+<div id="main" role="main">
+{{ $paginator := .Paginate (where .Site.RegularPages "Section" "not in" $.Site.Params.hiddenSections) }}
+{{ range $paginator.Pages }}
+<article class="hentry">
+  <header>
+    {{ if .Params.image.feature }}
+      <div class="entry-image-index">
+		  <a href="{{ .RelPermalink }}" title="{{ .Title }}"><img src="{{ .Params.image.feature | relURL }}" alt="{{ .Title }}"></a>
+      </div><!-- /.entry-image -->
+    {{ end }}
+    <div class="entry-meta">
+        {{ if gt .Date 0001 }} <!-- If Date is set (greater than year 0001) -->
+		<span class="entry-date date published updated"><time datetime="{{ .Date }}"><a href="{{ .RelPermalink }}">{{ .Date.Format (i18n "date.format") }}</a></time></span>
+        {{ end }}
+      <span class="entry-section">
+        <a href="{{ print "/" .Section "/" | relLangURL }}">
+          {{ with (index $.Site.Data.sections .Section) }}{{ with (index . "icon") }}
+          <i class="fa fa-fw fa-{{ . }}"></i>
+          {{ end }}{{ end }}
+          {{ print "sections." .Section | i18n }}
+        </a>
+      </span><!-- /.entry-section -->
+    </div><!-- /.entry-meta -->
+    {{ if .Params.link }}
+      <h1 class="entry-title"><a href="{{ .RelPermalink }}" class="permalink" rel="bookmark" title="{{ .Title }}"><i class="fa fa-bookmark"></i></a> <a href="{{ .Params.link }}">{{ .Title }}</a></h1>
+    {{ else }}
+	<h1 class="entry-title"><a href="{{ .RelPermalink }}" rel="bookmark" title="{{ .Title }}" itemprop="url">{{ .Title }}</a></h1>
+    {{ end }}
+  </header>
+  <div class="entry-content">
+    {{ if .Truncated }}
+    {{ .Summary }}
+    <footer class="entry-meta">
+      <a class="continue-reading btn-inverse" href="{{ .RelPermalink }}">{{ i18n "continueReading" }} &hellip;</a>
+    </footer>
+    {{ else }}
+    {{ .Content }}
+    {{ end }}
+  </div><!-- /.entry-content -->
+</article><!-- /.hentry -->
+{{ end }}
+
+{{ partial "pagination.html" . }}
+</div><!-- /#main -->
+{{ partial "foot.html" . }}
